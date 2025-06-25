@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>Calculadora Web Dark</title>
+<style>
+  /* Reset básico */
+  * {
+    box-sizing: border-box;
+  }
+  body {
+    margin: 0;
+    background-color: #000;
+    color: #eee;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    display: flex;
+    height: 100vh;
+    align-items: center;
+    justify-content: center;
+  }
+  .calculadora {
+    background: #121212;
+    border-radius: 15px;
+    box-shadow:
+      0 0 10px #ff2a2a88,
+      0 0 20px #ff2a2a66,
+      inset 0 0 5px #ff2a2aaa;
+    padding: 20px;
+    width: 320px;
+  }
+  .display {
+    background: #222;
+    color: #ddd;
+    font-size: 2.5rem;
+    padding: 15px 20px;
+    border-radius: 10px;
+    text-align: right;
+    margin-bottom: 20px;
+    user-select: none;
+    font-weight: 500;
+    min-height: 50px;
+    letter-spacing: 1.5px;
+    overflow-x: auto;
+  }
+  .botoes {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 15px;
+  }
+  button {
+    font-size: 1.5rem;
+    padding: 15px 0;
+    border: none;
+    border-radius: 10px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: background-color 0.2s ease;
+    color: #eee;
+    background: #333;
+    box-shadow:
+      0 2px 5px #0008,
+      inset 0 -3px 5px #0006;
+  }
+  button:hover {
+    background-color: #444;
+  }
+  /* Botões operadores em vermelho escuro */
+  .operador {
+    color: #b22222;
+    background: #3a0000;
+    box-shadow:
+      0 2px 8px #b2222266,
+      inset 0 -3px 7px #7a0000cc;
+  }
+  .operador:hover {
+    background-color: #5c0000;
+  }
+  /* Botão igual maior e em destaque */
+  .igual {
+    grid-column: span 2;
+    background: #b22222;
+    color: #fff;
+    box-shadow:
+      0 4px 15px #b2222299,
+      inset 0 -3px 10px #7a0000cc;
+  }
+  .igual:hover {
+    background-color: #8a1919;
+  }
+</style>
+</head>
+<body>
+
+<div class="calculadora">
+  <div id="display" class="display">0</div>
+  <div class="botoes">
+    <button onclick="limpar()">C</button>
+    <button onclick="apagar()">←</button>
+    <button class="operador" onclick="adicionarOperador('/')">÷</button>
+    <button class="operador" onclick="adicionarOperador('*')">×</button>
+
+    <button onclick="adicionarNumero('7')">7</button>
+    <button onclick="adicionarNumero('8')">8</button>
+    <button onclick="adicionarNumero('9')">9</button>
+    <button class="operador" onclick="adicionarOperador('-')">−</button>
+
+    <button onclick="adicionarNumero('4')">4</button>
+    <button onclick="adicionarNumero('5')">5</button>
+    <button onclick="adicionarNumero('6')">6</button>
+    <button class="operador" onclick="adicionarOperador('+')">+</button>
+
+    <button onclick="adicionarNumero('1')">1</button>
+    <button onclick="adicionarNumero('2')">2</button>
+    <button onclick="adicionarNumero('3')">3</button>
+    <button class="operador igual" onclick="calcular()">=</button>
+
+    <button style="grid-column: span 2;" onclick="adicionarNumero('0')">0</button>
+    <button onclick="adicionarNumero('.')">.</button>
+  </div>
+</div>
+
+<script>
+  const display = document.getElementById('display');
+  let expressao = '';
+
+  function atualizarDisplay() {
+    display.textContent = expressao || '0';
+  }
+
+  function adicionarNumero(num) {
+    // Evita dois pontos seguidos
+    if (num === '.' && expressao.endsWith('.')) return;
+    expressao += num;
+    atualizarDisplay();
+  }
+
+  function adicionarOperador(op) {
+    if (expressao === '') return; // Não começa com operador
+    const ultimo = expressao.slice(-1);
+    if ('+-*/'.includes(ultimo)) {
+      expressao = expressao.slice(0, -1) + op; // troca operador
+    } else {
+      expressao += op;
+    }
+    atualizarDisplay();
+  }
+
+  function limpar() {
+    expressao = '';
+    atualizarDisplay();
+  }
+
+  function apagar() {
+    expressao = expressao.slice(0, -1);
+    atualizarDisplay();
+  }
+
+  function calcular() {
+    try {
+      // Avalia a expressão com segurança mínima
+      const resultado = Function('"use strict";return (' + expressao + ')')();
+      expressao = resultado.toString();
+      atualizarDisplay();
+    } catch {
+      expressao = '';
+      display.textContent = 'Erro';
+    }
+  }
+</script>
+
+</body>
+</html>
+
