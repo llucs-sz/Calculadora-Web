@@ -49,4 +49,3 @@ Qualquer dúvida, abra uma issue no repositório ou me mande uma mensagem!
 ---
 
 Feito com ❤️ por llucs-sz
-
